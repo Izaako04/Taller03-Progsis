@@ -2,16 +2,58 @@
 #include <string.h>
 #include "profesor.h"
 
+// Función para verificar si una cédula ya existe
+int verificarCedulaUnica(const char *cedula, char cedulasRegistradas[][20], int cantidadCedulas) {
+    for (int i = 0; i < cantidadCedulas; i++) {
+        if (strcmp(cedula, cedulasRegistradas[i]) == 0) {
+            return 0; // Cédula no es única
+        }
+    }
+    return 1; // Cédula es única
+}
+
+// Función para verificar si un usuario ya existe
+int verificarUsuarioUnico(const char *usuario, char usuariosRegistrados[][50], int cantidadUsuarios) {
+    for (int i = 0; i < cantidadUsuarios; i++) {
+        if (strcmp(usuario, usuariosRegistrados[i]) == 0) {
+            return 0; // Usuario no es único
+        }
+    }
+    return 1; // Usuario es único
+}
+
 // Función para ingresar los datos de un profesor
 void ingresarProfesor(Profesor *profesor) {
     printf("Ingrese los nombres del profesor: ");
     scanf(" %[^\n]", profesor->nombres); // Leer cadena con espacios
     printf("Ingrese los apellidos del profesor: ");
     scanf(" %[^\n]", profesor->apellidos);
-    printf("Ingrese la Cédula de Ciudadanía (C.C.): ");
-    scanf(" %[^\n]", profesor->cedula);
-    printf("Ingrese el usuario: ");
-    scanf(" %[^\n]", profesor->usuario);
+     // Validar unicidad de cédula
+    while (1) {
+        printf("Ingrese la cédula del profesor: ");
+        scanf(" %[^\n]", profesor->cedula);
+
+        if (verificarCedulaUnica(profesor->cedula, cedulasRegistradas, *cantidadCedulas)) {
+            strcpy(cedulasRegistradas[*cantidadCedulas], profesor->cedula);
+            (*cantidadCedulas)++;
+            break;
+        } else {
+            printf("Error: La cédula ingresada ya existe. Intente nuevamente.\n");
+        }
+    }
+     // Validar unicidad de usuario
+    while (1) {
+        printf("Ingrese el usuario del profesor: ");
+        scanf(" %[^\n]", profesor->usuario);
+
+        if (verificarUsuarioUnico(profesor->usuario, usuariosRegistrados, *cantidadUsuarios)) {
+            strcpy(usuariosRegistrados[*cantidadUsuarios], profesor->usuario);
+            (*cantidadUsuarios)++;
+            break;
+        } else {
+            printf("Error: El usuario ingresado ya existe. Intente nuevamente.\n");
+        }
+    }
     printf("Ingrese la clave: ");
     scanf(" %[^\n]", profesor->clave);
     profesor->estado = 1; // Estado inicial activo

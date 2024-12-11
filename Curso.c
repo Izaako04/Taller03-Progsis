@@ -2,10 +2,30 @@
 #include <string.h>
 #include "curso.h"
 
+// Función para verificar si un código ya existe
+int verificarCodigoUnico(const char *codigo, char codigosRegistrados[][20], int cantidadCodigos) {
+    for (int i = 0; i < cantidadCodigos; i++) {
+        if (strcmp(codigo, codigosRegistrados[i]) == 0) {
+            return 0; // Código no es único
+        }
+    }
+    return 1; // Código es único
+}
+
 // Función para ingresar los datos de un curso
 void ingresarCurso(Curso *curso) {
-    printf("Ingrese el código del curso: ");
-    scanf(" %[^\n]", curso->codigo);
+     while (1) {
+        printf("Ingrese el código del curso: ");
+        scanf(" %[^\n]", curso->codigo);
+
+        if (verificarCodigoUnico(curso->codigo, codigosRegistrados, *cantidadCodigos)) {
+            strcpy(codigosRegistrados[*cantidadCodigos], curso->codigo);
+            (*cantidadCodigos)++;
+            break;
+        } else {
+            printf("Error: El código ingresado ya existe. Intente nuevamente.\n");
+        }
+    }
     printf("Ingrese el nombre de la materia: ");
     scanf(" %[^\n]", curso->materia);
     printf("Ingrese el nombre del profesor responsable: ");

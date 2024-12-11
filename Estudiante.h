@@ -11,7 +11,9 @@ typedef struct {
 } Estudiante;
 
 // Prototipos de funciones
-void ingresarEstudiante(Estudiante *estudiante);
+void ingresarEstudiante(Estudiante *estudiante, char matriculasRegistradas[][20], int *cantidadMatriculas);
+int verificarMatriculaUnica(const char *matricula, char matriculasRegistradas[][20], int cantidadMatriculas);
+int verificarUsuarioUnico(const char *usuario, char usuariosRegistrados[][50], int cantidadUsuarios);
 void editarEstudiante(Estudiante *estudiante, int cursoEnProceso);
 
 #endif // ESTUDIANTE_H

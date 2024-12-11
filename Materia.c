@@ -2,11 +2,34 @@
 #include <string.h>
 #include "materia.h"
 
-void ingresarMateria(Materia *materia) {
+// Función para verificar si un código ya existe
+int verificarCodigoUnico(const char *codigo, char codigosRegistrados[][20], int cantidadCodigos) {
+    for (int i = 0; i < cantidadCodigos; i++) {
+        if (strcmp(codigo, codigosRegistrados[i]) == 0) {
+            return 0; // Código no es único
+        }
+    }
+    return 1; // Código es único
+}
+
+// Función para ingresar los datos de una materia
+void ingresarMateria(Materia *materia, char codigosRegistrados[][20], int *cantidadCodigos) {
     printf("Ingrese el nombre de la materia: ");
-    scanf(" %[^\n]", materia->nombre); // Leer cadena con espacios
-    printf("Ingrese el código de la materia: ");
-    scanf(" %[^\n]", materia->codigo);
+    scanf(" %[^\n]", materia->nombre);
+
+    while (1) {
+        printf("Ingrese el código de la materia: ");
+        scanf(" %[^\n]", materia->codigo);
+
+        if (verificarCodigoUnico(materia->codigo, codigosRegistrados, *cantidadCodigos)) {
+            strcpy(codigosRegistrados[*cantidadCodigos], materia->codigo);
+            (*cantidadCodigos)++;
+            break;
+        } else {
+            printf("Error: El código ingresado ya existe. Intente nuevamente.\n");
+        }
+    }
+
     materia->estado = 1; // Estado inicial activo
     printf("Materia registrada con estado Activo.\n");
 }

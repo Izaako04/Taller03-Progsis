@@ -1,6 +1,10 @@
 #ifndef PROFESOR_H
 #define PROFESOR_H
 
+enum Tipo{
+    profesor
+}
+
 typedef struct {
     char nombres[100];
     char apellidos[100];
@@ -14,6 +18,8 @@ typedef struct {
 
 // Prototipos de funciones
 void ingresarProfesor(Profesor *profesor);
+int verificarCedulaUnica(const char *cedula, char cedulasRegistradas[][20], int cantidadCedulas);
+int verificarUsuarioUnico(const char *usuario, char usuariosRegistrados[][50], int cantidadUsuarios);
 void editarProfesor(Profesor *profesor, int cursoEnProceso);
 
 #endif // PROFESOR_H

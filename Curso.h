@@ -16,7 +16,8 @@ typedef struct {
 } Curso;
 
 // Prototipos de funciones
-void ingresarCurso(Curso *curso);
+void ingresarCurso(Curso *curso, char codigosRegistrados[][20], int *cantidadCodigos);
+int verificarCodigoUnico(const char *codigo, char codigosRegistrados[][20], int cantidadCodigos);
 void editarCurso(Curso *curso);
 
 #endif // CURSO_H
