@@ -4,6 +4,10 @@
 #include "profesor.h"
 #include "curso.h"
 
+#include <stdio.h>
+#include <string.h>
+#include "curso.h"
+
 void mostrarMenuPrincipal() {
     printf("\nMenu de opciones:\n");
     printf("a. Materia\n");
@@ -35,13 +39,9 @@ int main() {
                 scanf(" %c", &opcionSubmenu);
 
                 if (opcionSubmenu == '1') {
-                    Materia materia;
-                    ingresarMateria(&materia);
+                    ingresarMateria();
                 } else if (opcionSubmenu == '2') {
-                    Materia materia;
-                    // Aquí puedes cargar los datos existentes de la materia, si corresponde.
-                    int cursoEnProceso = 0; // Cambiar según tu lógica
-                    cambiarEstadoMateria(&materia, cursoEnProceso);
+                    cambiarEstadoMateria();
                 } else {
                     printf("Opción inválida.\n");
                 }
@@ -52,13 +52,9 @@ int main() {
                 scanf(" %c", &opcionSubmenu);
 
                 if (opcionSubmenu == '1') {
-                    Estudiante estudiante;
-                    ingresarEstudiante(&estudiante);
+                    ingresarEstudiante();
                 } else if (opcionSubmenu == '2') {
-                    Estudiante estudiante;
-                    // Aquí puedes cargar los datos existentes del estudiante, si corresponde.
-                    int cursoEnProceso = 0; // Cambiar según tu lógica
-                    editarEstudiante(&estudiante, cursoEnProceso);
+                    editarEstudiante();
                 } else {
                     printf("Opción inválida.\n");
                 }
@@ -69,13 +65,9 @@ int main() {
                 scanf(" %c", &opcionSubmenu);
 
                 if (opcionSubmenu == '1') {
-                    Profesor profesor;
-                    ingresarProfesor(&profesor);
+                    ingresarProfesor();
                 } else if (opcionSubmenu == '2') {
-                    Profesor profesor;
-                    // Aquí puedes cargar los datos existentes del profesor, si corresponde.
-                    int cursoEnProceso = 0; // Cambiar según tu lógica
-                    editarProfesor(&profesor, cursoEnProceso);
+                    editarProfesor();
                 } else {
                     printf("Opción inválida.\n");
                 }
@@ -86,12 +78,9 @@ int main() {
                 scanf(" %c", &opcionSubmenu);
 
                 if (opcionSubmenu == '1') {
-                    Curso curso;
-                    ingresarCurso(&curso);
+                    ingresarCurso();
                 } else if (opcionSubmenu == '2') {
-                    Curso curso;
-                    // Aquí puedes cargar los datos existentes del curso, si corresponde.
-                    editarCurso(&curso);
+                    editarCurso();
                 } else {
                     printf("Opción inválida.\n");
                 }

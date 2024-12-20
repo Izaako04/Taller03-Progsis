@@ -5,6 +5,7 @@
 #include "profesor.h"
 #include "materia.h"
 
+// Estructura encapsulada dentro de curso.c
 typedef struct {
     char codigo[20];
     char materia[100];
@@ -16,8 +17,8 @@ typedef struct {
 } Curso;
 
 // Prototipos de funciones
-void ingresarCurso(Curso *curso, char codigosRegistrados[][20], int *cantidadCodigos);
-int verificarCodigoUnico(const char *codigo, char codigosRegistrados[][20], int cantidadCodigos);
-void editarCurso(Curso *curso);
+void ingresarCurso();
+void editarCurso();
+int verificarCodigoCurso(const char *codigo);
 
-#endif // CURSO_H
+#endif

@@ -1,16 +1,17 @@
 #ifndef MATERIA_H
 #define MATERIA_H
 
-#define MAX_NOMBRE 100
-#define MAX_CODIGO 50
-
+// Definición de la estructura Materia
 typedef struct {
-    char nombreMateria[MAX_NOMBRE];
-    char codigo[MAX_CODIGO];
-    int estado;
-} Materia; 
+    char nombre[100];   // Nombre de la materia
+    char codigo[20];    // Código único de la materia
+    int estado;         // 1 para Activo, 0 para Inactivo
+} Materia;
 
-void ingresarMateria(Materia *materia);
-void cambiarEstado(Materia *materia, int cursoEnProceso);
+// Prototipos de funciones
+int verificarCodigoMateria(const char *codigo);
+int tieneCursoEnProceso(const char *codigoMateria);
+void ingresarMateria();
+void cambiarEstadoMateria();
 
-#endif MATERIA_H
+#endif // MATERIA_H
