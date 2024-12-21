@@ -4,10 +4,9 @@
 
 #define ARCHIVO_ESTUDIANTES "estudiantes.txt"
 
-// Función para verificar si una matrícula ya existe
 int verificarMatriculaUnica(const char *matricula) {
     FILE *archivo = fopen(ARCHIVO_ESTUDIANTES, "r");
-    if (!archivo) return 1; // Si no existe el archivo, se asume que la matrícula es única
+    if (!archivo) return 1;
 
     char linea[300];
     while (fgets(linea, sizeof(linea), archivo)) {
@@ -17,17 +16,16 @@ int verificarMatriculaUnica(const char *matricula) {
                estudiante.usuario, estudiante.clave, &estudiante.estado);
         if (strcmp(matricula, estudiante.matricula) == 0) {
             fclose(archivo);
-            return 0; // Matrícula no es única
+            return 0;
         }
     }
     fclose(archivo);
-    return 1; // Matrícula es única
+    return 1;
 }
 
-// Función para verificar si un usuario ya existe
 int verificarEstudianteUnico(const char *usuario) {
     FILE *archivo = fopen(ARCHIVO_ESTUDIANTES, "r");
-    if (!archivo) return 1; // Si no existe el archivo, se asume que el usuario es único
+    if (!archivo) return 1;
 
     char linea[300];
     while (fgets(linea, sizeof(linea), archivo)) {
@@ -37,14 +35,13 @@ int verificarEstudianteUnico(const char *usuario) {
                estudiante.usuario, estudiante.clave, &estudiante.estado);
         if (strcmp(usuario, estudiante.usuario) == 0) {
             fclose(archivo);
-            return 0; // Usuario no es único
+            return 0;
         }
     }
     fclose(archivo);
-    return 1; // Usuario es único
+    return 1;
 }
 
-// Función para ingresar un estudiante
 void ingresarEstudiante() {
     Estudiante estudiante;
     printf("Ingrese los nombres del estudiante: ");
@@ -76,9 +73,8 @@ void ingresarEstudiante() {
 
     printf("Ingrese la clave: ");
     scanf(" %[^\n]", estudiante.clave);
-    estudiante.estado = 1; // Estado inicial activo
+    estudiante.estado = 1;
 
-    // Guardar el estudiante en el archivo
     FILE *archivo = fopen(ARCHIVO_ESTUDIANTES, "a");
     if (!archivo) {
         printf("Error al abrir el archivo para guardar el estudiante.\n");
@@ -94,40 +90,33 @@ void ingresarEstudiante() {
 int estaCursandoCurso(const char *matricula) {
     FILE *archivo = fopen("cursos.txt", "r");
     if (!archivo) {
-        printf("Error al abrir el archivo de cursos.\n");
-        return 0; // Asumimos que no tiene curso en proceso si no se puede acceder al archivo
+        perror("Error al abrir el archivo de cursos");
+        return 0;
     }
 
     char linea[500];
     while (fgets(linea, sizeof(linea), archivo)) {
         char codigoCurso[20], codigoMateria[20], cedulaProfesor[20], fechaInicio[11], fechaFin[11];
-        char estudiantesMatriculas[500]; // Cadena para almacenar las matrículas separadas por `/`
+        char estudiantesMatriculas[500];
 
-        // Leer los datos principales del curso
         if (sscanf(linea, "%19[^-]-%19[^-]-%19[^-]-%10[^-]-%10[^-]-%499[^\n]",
                    codigoCurso, codigoMateria, cedulaProfesor, fechaInicio, fechaFin, estudiantesMatriculas) != 6) {
-            continue; // Pasar a la siguiente línea si el formato no coincide
+            fprintf(stderr, "Error al leer línea del archivo cursos.txt: %s", linea);
+            continue;
         }
 
-        // Si hay solo una matrícula (sin `/`), comparar directamente
-        if (strcmp(estudiantesMatriculas, matricula) == 0) {
-            fclose(archivo);
-            return 1; // Estudiante encontrado en un curso
-        }
-
-        // Separar las matrículas de estudiantes si hay múltiples
         char *token = strtok(estudiantesMatriculas, "/");
         while (token != NULL) {
             if (strcmp(token, matricula) == 0) {
                 fclose(archivo);
-                return 1; // Estudiante encontrado en un curso
+                return 1;
             }
             token = strtok(NULL, "/");
         }
     }
 
     fclose(archivo);
-    return 0; // No se encontró ningún curso asociado al estudiante
+    return 0;
 }
 
 
@@ -145,7 +134,7 @@ void editarEstudiante() {
     Estudiante estudiantes[100];
     int totalEstudiantes = 0;
 
-    // Leer estudiantes del archivo
+    
     while (fscanf(archivo, "%99[^-]-%99[^-]-%19[^-]-%49[^-]-%49[^-]-%d\n",
                   estudiantes[totalEstudiantes].nombres, estudiantes[totalEstudiantes].apellidos,
                   estudiantes[totalEstudiantes].matricula, estudiantes[totalEstudiantes].usuario,
@@ -153,23 +142,19 @@ void editarEstudiante() {
         totalEstudiantes++;
     }
 
-    // Mostrar estudiantes
     printf("Estudiantes disponibles:\n");
     for (int i = 0; i < totalEstudiantes; i++) {
         printf("%d. %s %s (Matrícula: %s)\n", i + 1, estudiantes[i].nombres, estudiantes[i].apellidos,
                estudiantes[i].matricula);
     }
 
-    // Solicitar matrícula del estudiante a editar
     printf("\nIngrese la matrícula del estudiante que desea editar: ");
     scanf(" %[^\n]", matricula);
 
-    // Buscar estudiante
     for (int i = 0; i < totalEstudiantes; i++) {
         if (strcmp(estudiantes[i].matricula, matricula) == 0) {
             encontrado = 1;
 
-            // Verificar si el estudiante tiene curso en proceso
             if (estaCursandoCurso(matricula)) {
                 printf("No se puede inactivar el estudiante porque tiene un curso en proceso.\n");
             } else {
@@ -184,7 +169,6 @@ void editarEstudiante() {
                 }
             }
 
-            // Cambiar clave del estudiante
             printf("¿Desea cambiar la clave del estudiante? (1 para Sí, 0 para No): ");
             int cambiarClave;
             if (scanf("%d", &cambiarClave) == 1 && cambiarClave == 1) {
@@ -203,7 +187,6 @@ void editarEstudiante() {
         printf("Estudiante con matrícula %s no encontrado.\n", matricula);
     }
 
-    // Reescribir archivo con los cambios
     fclose(archivo);
     archivo = fopen(ARCHIVO_ESTUDIANTES, "w");
     for (int i = 0; i < totalEstudiantes; i++) {

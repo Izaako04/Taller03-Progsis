@@ -5,44 +5,39 @@
 
 #define ARCHIVO_CURSOS "cursos.txt"
 
-// Función para verificar si un código ya existe
 int verificarCodigoCurso(const char *codigo) {
     FILE *archivo = fopen(ARCHIVO_CURSOS, "r");
-    if (!archivo) return 1; // Si no existe el archivo, el código es único
-
+    if (!archivo) return 1;
     char linea[500];
     while (fgets(linea, sizeof(linea), archivo)) {
         char codigoExistente[20];
         sscanf(linea, "%19[^-]", codigoExistente);
         if (strcmp(codigo, codigoExistente) == 0) {
             fclose(archivo);
-            return 0; // Código no es único
+            return 0;
         }
     }
     fclose(archivo);
-    return 1; // Código es único
+    return 1;
 }
 
 #include <stdio.h>
 #include <string.h>
 
-// Función para verificar que una fecha es válida y que la fecha de inicio no sea mayor que la fecha de fin
 int validarFechas(const char *fechaInicio, const char *fechaFin) {
     int anioInicio, mesInicio, diaInicio;
     int anioFin, mesFin, diaFin;
 
-    // Parsear las fechas
     if (sscanf(fechaInicio, "%d-%d-%d", &anioInicio, &mesInicio, &diaInicio) != 3 ||
         sscanf(fechaFin, "%d-%d-%d", &anioFin, &mesFin, &diaFin) != 3) {
-        return 0; // Formato de fecha inválido
+        return 0;
     }
 
-    // Comparar fechas
     if (anioInicio > anioFin) return 0;
     if (anioInicio == anioFin && mesInicio > mesFin) return 0;
     if (anioInicio == anioFin && mesInicio == mesFin && diaInicio > diaFin) return 0;
 
-    return 1; // Fechas válidas
+    return 1;
 }
 
 void ingresarCurso() {
@@ -51,7 +46,6 @@ void ingresarCurso() {
     printf("Ingrese el código del curso: ");
     scanf(" %[^\n]", curso.codigo);
 
-    // Validar materia por código
     printf("Ingrese el código de la materia: ");
     char codigoMateria[20];
     scanf(" %[^\n]", codigoMateria);
@@ -79,7 +73,6 @@ void ingresarCurso() {
         return;
     }
 
-    // Validar profesor por cédula
     printf("Ingrese la cédula del profesor responsable: ");
     char cedulaProfesor[20];
     scanf(" %[^\n]", cedulaProfesor);
@@ -106,7 +99,6 @@ void ingresarCurso() {
         return;
     }
 
-    // Solicitar y validar fechas
     while (1) {
         printf("Ingrese la fecha de inicio (YYYY-MM-DD): ");
         scanf(" %[^\n]", curso.fechaInicio);
@@ -120,14 +112,13 @@ void ingresarCurso() {
         }
     }
 
-    // Registrar estudiantes
     printf("Ingrese la cantidad de estudiantes a registrar (máximo 30): ");
     if (scanf("%d", &curso.numEstudiantes) != 1 || curso.numEstudiantes < 1 || curso.numEstudiantes > 30) {
         fprintf(stderr, "Error: Cantidad de estudiantes inválida. No se registrará el curso.\n");
         return;
     }
 
-    char matriculas[30][20]; // Para almacenar las matrículas de los estudiantes
+    char matriculas[30][20];
     for (int i = 0; i < curso.numEstudiantes; i++) {
         printf("\nRegistro del estudiante %d (ingrese matrícula): ", i + 1);
         char matriculaEstudiante[20];
@@ -158,17 +149,14 @@ void ingresarCurso() {
         strcpy(matriculas[i], matriculaEstudiante);
     }
 
-    // Guardar el curso
     FILE *archivoCursos = fopen("cursos.txt", "a");
     if (!archivoCursos) {
         printf("Error al abrir el archivo de cursos.\n");
         return;
     }
 
-    // Escribir el encabezado del curso
     fprintf(archivoCursos, "%s-%s-%s-%s-%s-", curso.codigo, codigoMateria, cedulaProfesor, curso.fechaInicio, curso.fechaFin);
 
-    // Escribir las matrículas de los estudiantes
     for (int i = 0; i < curso.numEstudiantes; i++) {
         fprintf(archivoCursos, "%s%s", i == 0 ? "" : "/", matriculas[i]);
     }
@@ -182,6 +170,8 @@ void ingresarCurso() {
 void editarCurso() {
     char codigo[20];
     int encontrado = 0;
+    Curso cursos[100];
+    int totalCursos = 0;
 
     FILE *archivo = fopen("cursos.txt", "r");
     if (!archivo) {
@@ -189,24 +179,17 @@ void editarCurso() {
         return;
     }
 
-    Curso cursos[100];
-    int totalCursos = 0;
-
-    // Leer cursos del archivo
     char linea[500];
     while (fgets(linea, sizeof(linea), archivo)) {
-        char estudiantesMatriculas[500]; // Cadena para almacenar las matrículas separadas por `/`
-
-        // Leer datos principales del curso y matrículas de estudiantes
+        char estudiantesMatriculas[500];
         if (sscanf(linea, "%19[^-]-%19[^-]-%19[^-]-%10[^-]-%10[^-]-%499[^\n]",
                    cursos[totalCursos].codigo, cursos[totalCursos].materia,
                    cursos[totalCursos].profesor, cursos[totalCursos].fechaInicio,
                    cursos[totalCursos].fechaFin, estudiantesMatriculas) != 6) {
             printf("Error al leer los datos del curso en la línea: %s\n", linea);
-            continue; // Pasar a la siguiente línea si el formato no coincide
+            continue;
         }
 
-        // Separar las matrículas de estudiantes
         cursos[totalCursos].numEstudiantes = 0;
         char *token = strtok(estudiantesMatriculas, "/");
         while (token != NULL && cursos[totalCursos].numEstudiantes < 30) {
@@ -218,7 +201,6 @@ void editarCurso() {
     }
     fclose(archivo);
 
-    // Mostrar cursos disponibles
     printf("\n------------------------------------------------------------\n");
     for (int i = 0; i < totalCursos; i++) {
         printf("Curso #%d\n", i + 1);
@@ -239,11 +221,9 @@ void editarCurso() {
         printf("------------------------------------------------------------\n");
     }
 
-    // Solicitar código del curso a editar
     printf("\nIngrese el código del curso que desea editar: ");
     scanf(" %[^\n]", codigo);
 
-    // Buscar curso
     for (int i = 0; i < totalCursos; i++) {
         if (strcmp(cursos[i].codigo, codigo) == 0) {
             encontrado = 1;
@@ -255,21 +235,38 @@ void editarCurso() {
             printf("Fecha de Inicio      : %s\n", cursos[i].fechaInicio);
             printf("Fecha de Fin         : %s\n", cursos[i].fechaFin);
 
-            printf("\n¿Desea modificar la fecha de inicio? (s/n): ");
             char opcion;
+            char nuevaFecha[11];
+
+            printf("\n¿Desea modificar la fecha de inicio? (s/n): ");
             scanf(" %c", &opcion);
             if (opcion == 's' || opcion == 'S') {
-                printf("Ingrese la nueva fecha de inicio (YYYY-MM-DD): ");
-                scanf(" %[^\n]", cursos[i].fechaInicio);
+                while (1) {
+                    printf("Ingrese la nueva fecha de inicio (YYYY-MM-DD): ");
+                    scanf(" %[^\n]", nuevaFecha);
+                    if (validarFechas(nuevaFecha, cursos[i].fechaFin)) {
+                        strcpy(cursos[i].fechaInicio, nuevaFecha);
+                        break;
+                    } else {
+                        printf("Error: Fecha de inicio inválida o posterior a la fecha de fin. Intente nuevamente.\n");
+                    }
+                }
             }
 
             printf("\n¿Desea modificar la fecha de fin? (s/n): ");
             scanf(" %c", &opcion);
             if (opcion == 's' || opcion == 'S') {
-                printf("Ingrese la nueva fecha de fin (YYYY-MM-DD): ");
-                scanf(" %[^\n]", cursos[i].fechaFin);
+                while (1) {
+                    printf("Ingrese la nueva fecha de fin (YYYY-MM-DD): ");
+                    scanf(" %[^\n]", nuevaFecha);
+                    if (validarFechas(cursos[i].fechaInicio, nuevaFecha)) {
+                        strcpy(cursos[i].fechaFin, nuevaFecha);
+                        break;
+                    } else {
+                        printf("Error: Fecha de fin inválida o anterior a la fecha de inicio. Intente nuevamente.\n");
+                    }
+                }
             }
-
             break;
         }
     }
@@ -279,7 +276,6 @@ void editarCurso() {
         return;
     }
 
-    // Reescribir archivo con los cambios
     archivo = fopen("cursos.txt", "w");
     if (!archivo) {
         printf("Error al abrir el archivo para escribir los cursos.\n");
@@ -287,11 +283,11 @@ void editarCurso() {
     }
 
     for (int i = 0; i < totalCursos; i++) {
-        // Escribir encabezado del curso
+
         fprintf(archivo, "%s-%s-%s-%s-%s-", cursos[i].codigo, cursos[i].materia,
                 cursos[i].profesor, cursos[i].fechaInicio, cursos[i].fechaFin);
 
-        // Escribir las matrículas de los estudiantes
+
         for (int j = 0; j < cursos[i].numEstudiantes; j++) {
             fprintf(archivo, "%s%s", j == 0 ? "" : "/", cursos[i].estudiantes[j].matricula);
         }

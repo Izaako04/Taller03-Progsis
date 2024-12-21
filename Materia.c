@@ -5,10 +5,10 @@
 
 #define ARCHIVO_MATERIAS "materias.txt"
 
-// Función para verificar si un código ya existe
+
 int verificarCodigoMateria(const char *codigo) {
     FILE *archivo = fopen(ARCHIVO_MATERIAS, "r");
-    if (!archivo) return 1; // Si no existe el archivo, el código es único
+    if (!archivo) return 1;
 
     char linea[200];
     while (fgets(linea, sizeof(linea), archivo)) {
@@ -17,7 +17,7 @@ int verificarCodigoMateria(const char *codigo) {
                materia.nombre, materia.codigo, &materia.estado);
         if (strcmp(codigo, materia.codigo) == 0) {
             fclose(archivo);
-            return 0; // Código no es único
+            return 0;
         }
     }
     fclose(archivo);
@@ -140,7 +140,7 @@ void cambiarEstadoMateria() {
         return;
     }
 
-    // Verificar si la materia está en curso
+    
     if (tieneCursoEnProceso(materias[indice].codigo)) {
         printf("No se puede inactivar la materia porque tiene un curso en proceso.\n");
         fclose(archivo);
