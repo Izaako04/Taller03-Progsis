@@ -34,7 +34,7 @@ int main() {
         scanf(" %c", &opcionPrincipal);
 
         switch (opcionPrincipal) {
-            case 'a': // Materia
+            case 'a':
                 mostrarSubMenu("Materia");
                 scanf(" %c", &opcionSubmenu);
 
@@ -47,7 +47,7 @@ int main() {
                 }
                 break;
 
-            case 'b': // Estudiante
+            case 'b':
                 mostrarSubMenu("Estudiante");
                 scanf(" %c", &opcionSubmenu);
 
@@ -60,7 +60,7 @@ int main() {
                 }
                 break;
 
-            case 'c': // Profesor
+            case 'c':
                 mostrarSubMenu("Profesor");
                 scanf(" %c", &opcionSubmenu);
 
@@ -73,7 +73,7 @@ int main() {
                 }
                 break;
 
-            case 'd': // Curso
+            case 'd':
                 mostrarSubMenu("Curso");
                 scanf(" %c", &opcionSubmenu);
 
@@ -86,7 +86,7 @@ int main() {
                 }
                 break;
 
-            case 'e': // Salir
+            case 'e':
                 printf("Saliendo del programa...\n");
                 break;
 

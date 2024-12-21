@@ -278,15 +278,15 @@ void editarCurso() {
 
     archivo = fopen("cursos.txt", "w");
     if (!archivo) {
-        printf("Error al abrir el archivo para escribir los cursos.\n");
+        printf("Error al abrir el archivo para escritura.\n");
         return;
     }
 
     for (int i = 0; i < totalCursos; i++) {
-
-        fprintf(archivo, "%s-%s-%s-%s-%s-", cursos[i].codigo, cursos[i].materia,
-                cursos[i].profesor, cursos[i].fechaInicio, cursos[i].fechaFin);
-
+        // Formato de escritura corregido (usar %s para las fechas):
+        fprintf(archivo, "%s-%s-%s-%s-%s-",
+                cursos[i].codigo, cursos[i].materia, cursos[i].profesor,
+                cursos[i].fechaInicio, cursos[i].fechaFin);
 
         for (int j = 0; j < cursos[i].numEstudiantes; j++) {
             fprintf(archivo, "%s%s", j == 0 ? "" : "/", cursos[i].estudiantes[j].matricula);
